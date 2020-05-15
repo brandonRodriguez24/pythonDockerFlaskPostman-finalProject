@@ -8,3 +8,13 @@ This project is a homework assignment to teach how to get Pycharm setup with Doc
 ![postman request output](screenshots/postman.png)
 # SQL Data Screenshot
 ![pycharm data query](screenshots/query.png)
+# Data table in pycharm
+![data_tb_pycharm](screenshots/data_tb_pycharm.png)
+
+![postman request output](screenshots/record.png)
+
+![postman request output](screenshots/new_record.png)
+
+![postman request output](screenshots/add.png)
+ 
+![postman request output](screenshots/delete.png)
