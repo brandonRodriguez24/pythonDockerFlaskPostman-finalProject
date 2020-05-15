@@ -20,7 +20,7 @@ mysql.init_app(app)
 def index():
     user = {'username': 'Brandon'}
     cursor = mysql.get_db().cursor()
-    cursor.execute('SELECT * FROM citiesData.city_csv')
+    cursor.execute('SELECT * FROM citiesData.tblCitiesImport')
     result = cursor.fetchall()
     return render_template('index.html', title='Home', user=user, cities=result)
 
@@ -28,7 +28,7 @@ def index():
 @app.route('/view/<int:city_id>', methods=['GET'])
 def record_view(city_id):
     cursor = mysql.get_db().cursor()
-    cursor.execute('SELECT * FROM citiesData.city_csv WHERE id=%s', city_id)
+    cursor.execute('SELECT * FROM citiesData.tblCitiesImport WHERE id=%s', city_id)
     result = cursor.fetchall()
     return render_template('view.html', title='View Form', city=result[0])
 
@@ -36,7 +36,7 @@ def record_view(city_id):
 @app.route('/edit/<int:city_id>', methods=['GET'])
 def form_edit_get(city_id):
     cursor = mysql.get_db().cursor()
-    cursor.execute('SELECT * FROM citiesData.city_csv WHERE id=%s', city_id)
+    cursor.execute('SELECT * FROM citiesData.tblCitiesImport WHERE id=%s', city_id)
     result = cursor.fetchall()
     return render_template('edit.html', title='Edit Form', city=result[0])
 
@@ -47,7 +47,7 @@ def form_update_post(city_id):
     inputData = (request.form.get('LatD'), request.form.get('LatM'), request.form.get('LatS'),
                  request.form.get('NS'), request.form.get('LonD'),
                  request.form.get('LonM'), request.form.get('LonS'),request.form.get('EW'),request.form.get('City'),request.form.get('State'), city_id)
-    sql_update_query = """UPDATE citiesData.city_csv t SET t.LatD = %s, t.LatM = %s, t.LatS = %s, t.NS = 
+    sql_update_query = """UPDATE citiesData.tblCitiesImport t SET t.LatD = %s, t.LatM = %s, t.LatS = %s, t.NS = 
     %s, t.LonD = %s, t.LonM = %s, t.LonS = %s, t.EW = %s, t.City = %s, t.State = %s WHERE t.id = %s """
     cursor.execute(sql_update_query, inputData)
     mysql.get_db().commit()
@@ -64,7 +64,7 @@ def form_insert_post():
     inputData = (request.form.get('LatD'), request.form.get('LatM'), request.form.get('LatS'),
                  request.form.get('NS'), request.form.get('LonD'),
                  request.form.get('LonM'), request.form.get('LonS'), request.form.get('EW'), request.form.get('City'), request.form.get('State'))
-    sql_insert_query = """INSERT INTO citiesData.city_csv (LatD,LatM,LatS,NS,LonD,LonM,LonS,EW,City,State) VALUES (%s,%s,%s,%s,%s, %s,%s,%s,%s,%s) """
+    sql_insert_query = """INSERT INTO citiesData.tblCitiesImport (LatD,LatM,LatS,NS,LonD,LonM,LonS,EW,City,State) VALUES (%s,%s,%s,%s,%s, %s,%s,%s,%s,%s) """
     cursor.execute(sql_insert_query, inputData)
     mysql.get_db().commit()
     return redirect("/", code=302)
@@ -72,7 +72,7 @@ def form_insert_post():
 @app.route('/delete/<int:city_id>', methods=['POST'])
 def form_delete_post(city_id):
     cursor = mysql.get_db().cursor()
-    sql_delete_query = """DELETE FROM citiesData.city_csv WHERE id = %s """
+    sql_delete_query = """DELETE FROM citiesData.tblCitiesImport WHERE id = %s """
     cursor.execute(sql_delete_query, city_id)
     mysql.get_db().commit()
     return redirect("/", code=302)
@@ -81,7 +81,7 @@ def form_delete_post(city_id):
 @app.route('/api/v1/cities', methods=['GET'])
 def api_browse() -> str:
     cursor = mysql.get_db().cursor()
-    cursor.execute('SELECT * FROM citiesData.city_csv')
+    cursor.execute('SELECT * FROM citiesData.tblCitiesImport')
     result = cursor.fetchall()
     json_result = json.dumps(result);
     resp = Response(json_result, status=200, mimetype='application/json')
@@ -91,7 +91,7 @@ def api_browse() -> str:
 @app.route('/api/v1/cities/<int:city_id>', methods=['GET'])
 def api_retrieve(city_id) -> str:
     cursor = mysql.get_db().cursor()
-    cursor.execute('SELECT * FROM citiesData.city_csv WHERE id=%s', city_id)
+    cursor.execute('SELECT * FROM citiesData.tblCitiesImport WHERE id=%s', city_id)
     result = cursor.fetchall()
     json_result = json.dumps(result);
     resp = Response(json_result, status=200, mimetype='application/json')
@@ -105,7 +105,7 @@ def api_edit(city_id) -> str:
     inputData = (content['LatD'], content['LatM'], content['LatS'],
                  content['NS'], content['LonD'],
                  content['LonM'], content['LonS'], content['EW'], content['City'], content['State'],city_id)
-    sql_update_query = """UPDATE citiesData.city_csv t SET t.LatD = %s, t.LatM = %s, t.LatS = %s, t.NS = 
+    sql_update_query = """UPDATE citiesData.tblCitiesImport t SET t.LatD = %s, t.LatM = %s, t.LatS = %s, t.NS = 
     %s, t.LonD = %s, t.LonM = %s, t.LonS = %s, t.EW = %s, t.City = %s, t.State = %s WHERE t.id = %s """
     cursor.execute(sql_update_query, inputData)
     mysql.get_db().commit()
@@ -121,7 +121,7 @@ def api_add() -> str:
     inputData = (content['LatD'], content['LatM'], content['LatS'],
                  content['NS'], content['LonD'],
                  content['LonM'], content['LonS'], content['EW'], content['City'], content['State'])
-    sql_insert_query = """INSERT INTO citiesData.city_csv (LatD,LatM,LatS,NS,LonD,LonM,LonS,EW,City,State) VALUES (%s, %s,%s, %s,%s, %s,%s,%s, %s,%s) """
+    sql_insert_query = """INSERT INTO citiesData.tblCitiesImport (LatD,LatM,LatS,NS,LonD,LonM,LonS,EW,City,State) VALUES (%s, %s,%s, %s,%s, %s,%s,%s, %s,%s) """
     cursor.execute(sql_insert_query, inputData)
     mysql.get_db().commit()
     resp = Response(status=201, mimetype='application/json')
@@ -130,7 +130,7 @@ def api_add() -> str:
 @app.route('/api/v1/cities/<int:city_id>', methods=['DELETE'])
 def api_delete(city_id) -> str:
     cursor = mysql.get_db().cursor()
-    sql_delete_query = """DELETE FROM citiesData.city_csv WHERE id = %s """
+    sql_delete_query = """DELETE FROM citiesData.tblCitiesImport WHERE id = %s """
     cursor.execute(sql_delete_query, city_id)
     mysql.get_db().commit()
     resp = Response(status=200, mimetype='application/json')
